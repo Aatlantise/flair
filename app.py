@@ -6,6 +6,7 @@ from flair.data import Sentence
 def create_app():
 
     app = Flask(__name__)
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
     tagger = SequenceTagger.load('chunk')
 
@@ -17,17 +18,16 @@ def create_app():
         sentence = Sentence(message)
         tagger.predict(sentence)
 
-        response = {}
-        response["sentence"] = {}
-        response["sentence"]["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+        response = {"text": message}
+        response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
 
         chunk_str = ""
-        for chunk in response["sentence"]["chunks"]:
+        for chunk in response["chunks"]:
             chunk['labels'] = str(chunk['labels'])
             chunk_str += "<" + chunk["text"] + "> "
         chunk_str += '.'
 
-        response["sentence"]["chunk_str"] = chunk_str
+        response["chunk_str"] = chunk_str
 
         return jsonify(response), 200
 
