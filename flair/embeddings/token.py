@@ -129,7 +129,8 @@ class WordEmbeddings(TokenEmbeddings):
 
         self.instance_parameters = self.get_instance_parameters(locals=locals())
 
-        hu_path: str = "https://flair.informatik.hu-berlin.de/resources/embeddings/token"
+        #hu_path: str = "https://flair.informatik.hu-berlin.de/resources/embeddings/token"
+        hu_path: str = "/root/.flair/embeddings"
 
         cache_dir = Path("embeddings")
 

@@ -178,7 +178,7 @@ def download_file(url: str, cache_dir: Union[str, Path]):
     logger.info("%s not found in cache, downloading to %s", url, temp_filename)
 
     # GET file object
-    req = requests.get(url, stream=True)
+    req = requests.get(url, stream=True, verify=False)
     content_length = req.headers.get("Content-Length")
     total = int(content_length) if content_length is not None else None
     progress = Tqdm.tqdm(unit="B", total=total)
@@ -230,7 +230,7 @@ def get_from_cache(url: str, cache_dir: Path = None) -> Path:
         logger.info("%s not found in cache, downloading to %s", url, temp_filename)
 
         # GET file object
-        req = requests.get(url, stream=True, headers={"User-Agent": "Flair"})
+        req = requests.get(url, stream=True, verify=False, headers={"User-Agent": "Flair"})
         content_length = req.headers.get("Content-Length")
         total = int(content_length) if content_length is not None else None
         progress = Tqdm.tqdm(unit="B", total=total)
