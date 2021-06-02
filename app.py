@@ -14,22 +14,27 @@ def create_app():
     def chunk():
         if not request.json or not 'message' in request.json:
             abort(400)
-        message = request.json['message']
-        sentence = Sentence(message)
-        tagger.predict(sentence)
+        messages = request.json['message']
 
-        response = {"text": message}
-        response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+        responses = {"sentences": []}
 
-        chunk_str = ""
-        for chunk in response["chunks"]:
-            chunk['labels'] = str(chunk['labels'])
-            chunk_str += "<" + chunk["text"] + "> "
-        chunk_str += '.'
+        for message in messages:
+            sentence = Sentence(message)
+            tagger.predict(sentence)
 
-        response["chunk_str"] = chunk_str
+            response = {"text": message}
+            response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
 
-        return jsonify(response), 200
+            chunk_str = ""
+            for chunk in response["chunks"]:
+                chunk['labels'] = str(chunk['labels'])
+                chunk_str += "<" + chunk["text"] + "> "
+            chunk_str += '.'
+
+            response["chunk_str"] = chunk_str
+            responses["sentences"].append(response)
+
+        return jsonify(responses), 200
 
     return app
 
