@@ -1,11 +1,12 @@
-from sanic import Sanic
-from sanic.response import json
+from flask import abort, Flask, jsonify, request
 from flair.models import SequenceTagger
 from flair.data import Sentence
+import gc
 
 
 def dummy_app():
-    dummy = Sanic("Toy app that echoes input")
+    dummy = Flask(__name__)
+    dummy.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
     @dummy.route('/api/v1/dummy', methods=['POST'])
     def echo():
@@ -17,13 +18,13 @@ def dummy_app():
         for message in messages:
             responses["sentences"].append(message)
 
-        return json(responses)
+        return jsonify(responses)
     return dummy
 
 def create_app():
 
-    app = Sanic("Flair chunking API")
-    #app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+    app = Flask(__name__)
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
     tagger = SequenceTagger.load('chunk')
 
@@ -35,27 +36,33 @@ def create_app():
 
         responses = {"sentences": []}
 
-        for message in messages:
-            message = message.replace("%27", "'")
+        for msg in messages:
+            message = msg.replace("%27", "'")
             sentence = Sentence(message)
             try:
                 tagger.predict(sentence)
-
-                response = {"text": message}
-                response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
-
-                chunk_str = ""
-                for chunk in response["chunks"]:
-                    chunk['labels'] = str(chunk['labels'])
-                    chunk_str += "<" + chunk["text"] + "> "
-                chunk_str += '.'
-
-                response["chunk_str"] = chunk_str
-                responses["sentences"].append(response)
             except:
-                print('Error encountered while predicting: ' + message)
+                print('Error encountered while predicting: ' + msg)
+                print('Exiting loop...')
+                break
 
-        return json(responses)
+            response = {"text": message}
+            response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+
+            chunk_str = ""
+            for chunk in response["chunks"]:
+                chunk['labels'] = str(chunk['labels'])
+                chunk_str += "<" + chunk["text"] + "> "
+            chunk_str += '.'
+
+            response["chunk_str"] = chunk_str
+            responses["sentences"].append(response)
+
+            gc.collect()
+
+
+
+        return jsonify(responses), 200
 
     return app
 
@@ -63,5 +70,4 @@ if __name__ == "__main__":
     #from waitress import serve
     #serve(app, host="0.0.0.0", port=5000)
 
-    app = create_app()
     app.run()
