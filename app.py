@@ -32,33 +32,35 @@ def create_app():
     def chunk():
         if not request.json or not 'message' in request.json:
             abort(400)
-        messages = request.json['message']
+        entire_message = request.json['message']
 
         responses = {"sentences": []}
 
-        for msg in messages:
-            message = msg.replace("%27", "'")
-            sentence = Sentence(message)
-            try:
-                tagger.predict(sentence)
-            except:
-                print('Error encountered while predicting: ' + msg)
-                print('Exiting loop...')
-                break
+        for i in range(int(len(entire_message)/5) + 1):
+            messages = entire_message[i:i+5]
+            for msg in messages:
+                message = msg.replace("%27", "'")
+                sentence = Sentence(message)
+                try:
+                    tagger.predict(sentence)
+                except:
+                    print('Error encountered while predicting: ' + msg)
+                    print('Exiting loop...')
+                    break
 
-            response = {"text": message}
-            response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+                response = {"text": message}
+                response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
 
-            chunk_str = ""
-            for chunk in response["chunks"]:
-                chunk['labels'] = str(chunk['labels'])
-                chunk_str += "<" + chunk["text"] + "> "
-            chunk_str += '.'
+                chunk_str = ""
+                for chunk in response["chunks"]:
+                    chunk['labels'] = str(chunk['labels'])
+                    chunk_str += "<" + chunk["text"] + "> "
+                chunk_str += '.'
 
-            response["chunk_str"] = chunk_str
-            responses["sentences"].append(response)
+                response["chunk_str"] = chunk_str
+                responses["sentences"].append(response)
 
-            gc.collect()
+                gc.collect()
 
 
 
