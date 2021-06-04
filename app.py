@@ -15,7 +15,7 @@ def dummy_app():
         responses = {"sentences": []}
 
         for message in messages:
-            responses["sentence"].append(message)
+            responses["sentences"].append(message)
 
         return jsonify(responses)
     return dummy
