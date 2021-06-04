@@ -19,6 +19,7 @@ def create_app():
         responses = {"sentences": []}
 
         for message in messages:
+            message = message.replace("%27", "'")
             sentence = Sentence(message)
             tagger.predict(sentence)
 
