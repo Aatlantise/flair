@@ -21,7 +21,10 @@ def create_app():
         for message in messages:
             message = message.replace("%27", "'")
             sentence = Sentence(message)
-            tagger.predict(sentence)
+            try:
+                tagger.predict(sentence)
+            except:
+                print('Error encountered while predicting: ' + message)
 
             response = {"text": message}
             response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
