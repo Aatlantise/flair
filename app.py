@@ -37,7 +37,7 @@ def create_app():
         responses = {"sentences": []}
 
         for i in range(int(len(entire_message)/5) + 1):
-            messages = entire_message[i:i+5]
+            messages = entire_message[i:min(i+5, len(entire_message))]
             for msg in messages:
                 message = msg.replace("%27", "'")
                 sentence = Sentence(message)
