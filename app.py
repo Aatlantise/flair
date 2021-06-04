@@ -3,6 +3,23 @@ from flair.models import SequenceTagger
 from flair.data import Sentence
 
 
+def dummy_app():
+    dummy = Flask(__name__)
+    dummy.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+    @dummy.route('/api/v1/dummy', methods=['POST'])
+    def echo():
+        if not request.json or not 'message' in request.json:
+            abort(400)
+        messages = request.json['message']
+        responses = {"sentences": []}
+
+        for message in messages:
+            responses["sentence"].append(message)
+
+        return jsonify(responses)
+    return dummy
+
 def create_app():
 
     app = Flask(__name__)
@@ -23,20 +40,20 @@ def create_app():
             sentence = Sentence(message)
             try:
                 tagger.predict(sentence)
+
+                response = {"text": message}
+                response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+
+                chunk_str = ""
+                for chunk in response["chunks"]:
+                    chunk['labels'] = str(chunk['labels'])
+                    chunk_str += "<" + chunk["text"] + "> "
+                chunk_str += '.'
+
+                response["chunk_str"] = chunk_str
+                responses["sentences"].append(response)
             except:
                 print('Error encountered while predicting: ' + message)
-
-            response = {"text": message}
-            response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
-
-            chunk_str = ""
-            for chunk in response["chunks"]:
-                chunk['labels'] = str(chunk['labels'])
-                chunk_str += "<" + chunk["text"] + "> "
-            chunk_str += '.'
-
-            response["chunk_str"] = chunk_str
-            responses["sentences"].append(response)
 
         return jsonify(responses), 200
 
