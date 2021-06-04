@@ -1,11 +1,11 @@
-from flask import abort, Flask, jsonify, request
+from sanic import Sanic
+from sanic.response import json
 from flair.models import SequenceTagger
 from flair.data import Sentence
 
 
 def dummy_app():
-    dummy = Flask(__name__)
-    dummy.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+    dummy = Sanic("Toy app that echoes input")
 
     @dummy.route('/api/v1/dummy', methods=['POST'])
     def echo():
@@ -17,13 +17,13 @@ def dummy_app():
         for message in messages:
             responses["sentences"].append(message)
 
-        return jsonify(responses)
+        return json(responses)
     return dummy
 
 def create_app():
 
-    app = Flask(__name__)
-    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+    app = Sanic("Flair chunking API")
+    #app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
     tagger = SequenceTagger.load('chunk')
 
@@ -55,7 +55,7 @@ def create_app():
             except:
                 print('Error encountered while predicting: ' + message)
 
-        return jsonify(responses), 200
+        return json(responses)
 
     return app
 
@@ -63,4 +63,5 @@ if __name__ == "__main__":
     #from waitress import serve
     #serve(app, host="0.0.0.0", port=5000)
 
+    app = create_app()
     app.run()
