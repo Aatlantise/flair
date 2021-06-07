@@ -26,7 +26,7 @@ def create_app():
     app = Flask(__name__)
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-    tagger = SequenceTagger.load('chunk')
+    tagger = SequenceTagger.load('flair_chunking_model.pt')
 
     @app.route('/api/v1/flair_chunking', methods=['POST'])
     def chunk():
