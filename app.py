@@ -103,6 +103,7 @@ def create_app():
 
 
         return jsonify(responses), 200
+    return app
 
 if __name__ == "__main__":
     #from waitress import serve
