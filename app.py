@@ -96,7 +96,7 @@ def create_app():
                 chunk_str += '.'
 
                 response["chunk_str"] = chunk_str
-                responses["sentences"].append(response)
+                responses["sentence"].append(response)
 
                 gc.collect()
 
