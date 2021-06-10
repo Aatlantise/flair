@@ -30,41 +30,41 @@ def create_app():
 
     @app.route('/api/v1/flair_chunking', methods=['POST'])
     def chunk():
-    '''
-    Performs chunking on a list of input sentences and returns chunking result
+        '''
+        Performs chunking on a list of input sentences and returns chunking result
 
-    Input:
-    Chunking objective in JSON format: {
-        "sentence": [
-            {
-                "text": "This is a sentence."
-            },
-            {
-                "text": "This is another sentence."
-            }
-        ]
-    }
+        Input:
+        Chunking objective in JSON format: {
+            "sentence": [
+                {
+                    "text": "This is a sentence."
+                },
+                {
+                    "text": "This is another sentence."
+                }
+            ]
+        }
 
-    Returns:
-    Response in JSON format: {
-        "sentence": [
-            {
-                "chunk_str": "<This> <is> <a sentence> .",
-                "chunks": [
-                    {
-                        "end_pos": 4
-                        "labels": "[NP (0.9964)]",
-                        "start_pos": 0,
-                        "text": "This"
-                    }, ...
-                ],
-                "text": "This is a sentence ."
-            }
-        ]
+        Returns:
+        Response in JSON format: {
+            "sentence": [
+                {
+                    "chunk_str": "<This> <is> <a sentence> .",
+                    "chunks": [
+                        {
+                            "end_pos": 4
+                            "labels": "[NP (0.9964)]",
+                            "start_pos": 0,
+                            "text": "This"
+                        }, ...
+                    ],
+                    "text": "This is a sentence ."
+                }
+            ]
 
-    }
+        }
 
-    '''
+        '''
         if not request.json or not 'sentence' in request.json:
             abort(400)
         entire_message = request.json['sentence'] # list under the key "sentence", whose elements are single-value dictionaries {"text": "This is a sentence."}
