@@ -39,6 +39,8 @@ def create_app():
         for i in range(int(len(entire_message)/5) + 1):
             messages = entire_message[i:min(i+5, len(entire_message))]
             for msg in messages:
+                if len(msg) > 5000:
+                    msg = msg[:5000]
                 message = msg.replace("%27", "'")
                 sentence = Sentence(message)
                 try:
