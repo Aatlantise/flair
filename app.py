@@ -85,7 +85,7 @@ def create_app():
             try:
                 tagger.predict(sentences)
             except:
-                print('Error encountered while predicting sentence batch ' + str(10*i) ' though ' + str(11*i - 1))
+                print('Error encountered while predicting sentence batch ' + str(10*i) + ' through ' + str(11*i - 1))
                 print('Exiting loop...')
                 break
 
