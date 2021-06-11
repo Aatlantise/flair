@@ -71,23 +71,27 @@ def create_app():
 
         responses = {"sentence": []}
 
-        for i in range(int(len(entire_message)/5) + 1):
-            messages = entire_message[5*i:min(5*i+5, len(entire_message))]
+        for i in range(int(len(entire_message)/10) + 1):
+            messages = entire_message[10*i:min(11*i, len(entire_message))]
+
+            sentences = []
             for message in messages:
                 msg = message["text"]
                 if len(msg) > 5000: # cutoff of length 5000 for input sentences
                     msg = msg[:5000]
                 msg = msg.replace("%27", "'")
-                sentence = Sentence(msg)
-                try:
-                    tagger.predict(sentence)
-                except:
-                    print('Error encountered while predicting: ' + msg)
-                    print('Exiting loop...')
-                    break
+                sentences.append(Sentence(msg))
 
-                response = {"text": msg}
-                response["chunks"] = sentence.to_dict(tag_type='np')["entities"]
+            try:
+                tagger.predict(sentences)
+            except:
+                print('Error encountered while predicting sentence batch ' + str(10*i) ' though ' + str(11*i - 1))
+                print('Exiting loop...')
+                break
+
+            for predicted_sentence in sentences:
+                response = {"text": predicted_sentence.to_original_text()}
+                response["chunks"] = predicted_sentence.to_dict(tag_type='np')["entities"]
 
                 chunk_str = ""
                 for chunk in response["chunks"]:
