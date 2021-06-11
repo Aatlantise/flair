@@ -72,7 +72,7 @@ def create_app():
         responses = {"sentence": []}
 
         for i in range(int(len(entire_message)/5) + 1):
-            messages = entire_message[i:min(i+5, len(entire_message))]
+            messages = entire_message[5*i:min(5*i+5, len(entire_message))]
             for message in messages:
                 msg = message["text"]
                 if len(msg) > 5000: # cutoff of length 5000 for input sentences
