@@ -71,7 +71,9 @@ def create_app():
 
         responses = {"sentence": []}
 
-        batch_size = 16
+        batch_size = 32
+
+        print("Batch size is " + str(batch_size))
 
         for i in range(int(len(entire_message) / batch_size) + 1):
             messages = entire_message[batch_size*i:min(batch_size*i+batch_size, len(entire_message))] # use batch size of 16, and loop through each batch, until end of entire input
