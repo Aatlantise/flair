@@ -28,6 +28,10 @@ def create_app():
 
     tagger = SequenceTagger.load('flair_chunking_model.pt')
 
+    batch_size = 128
+
+    print("Batch size is " + str(batch_size))
+
     @app.route('/api/v1/flair_chunking', methods=['POST'])
     def chunk():
         '''
@@ -70,10 +74,6 @@ def create_app():
         entire_message = request.json['sentence'] # list under the key "sentence", whose elements are single-value dictionaries {"text": "This is a sentence."}
 
         responses = {"sentence": []}
-
-        batch_size = 64
-
-        print("Batch size is " + str(batch_size))
 
         for i in range(int(len(entire_message) / batch_size) + 1):
             messages = entire_message[batch_size*i:min(batch_size*i+batch_size, len(entire_message))] # use batch size, and loop through each batch, until end of entire input
