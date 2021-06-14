@@ -71,8 +71,10 @@ def create_app():
 
         responses = {"sentence": []}
 
-        for i in range(int(len(entire_message) / 128) + 1):
-            messages = entire_message[10*i:min(10*i+10, len(entire_message))] # use batch size of 16, and loop through each batch, until end of entire input
+        batch_size = 16
+
+        for i in range(int(len(entire_message) / batch_size) + 1):
+            messages = entire_message[batch_size*i:min(batch_size*i+batch_size, len(entire_message))] # use batch size of 16, and loop through each batch, until end of entire input
 
             sentences = []
             for message in messages:
