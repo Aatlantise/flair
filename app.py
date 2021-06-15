@@ -28,7 +28,7 @@ def create_app():
 
     tagger = SequenceTagger.load('flair_chunking_model.pt')
 
-    batch_size = 64
+    batch_size = 16
 
     print("Batch size is " + str(batch_size))
 
@@ -92,6 +92,7 @@ def create_app():
                 print('Error encountered while predicting sentence batch ' + str(10*i) + ' through ' + str(11*i - 1))
                 print('Exiting loop...')
                 break
+            gc.collect()
 
             for predicted_sentence in sentences:
                 response = {"text": predicted_sentence.to_original_text()}
