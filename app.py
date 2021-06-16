@@ -28,7 +28,7 @@ def create_app():
 
     tagger = SequenceTagger.load('flair_chunking_model.pt')
 
-    batch_size = 16
+    batch_size = 8
 
     print("Batch size is " + str(batch_size))
 
