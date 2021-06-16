@@ -92,6 +92,7 @@ def create_app():
                 print('Error encountered while predicting sentence batch ' + str(10*i) + ' through ' + str(11*i - 1))
                 print('Exiting loop...')
                 break
+
             gc.collect()
 
             for predicted_sentence in sentences:
@@ -107,7 +108,7 @@ def create_app():
                 response["chunk_str"] = chunk_str
                 responses["sentence"].append(response)
 
-                gc.collect()
+            gc.collect()
 
 
 
