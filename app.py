@@ -81,8 +81,8 @@ def create_app():
             sentences = []
             for message in messages:
                 msg = message["text"]
-                if len(msg) > 5000: # cutoff of length 5000 for input sentences
-                    msg = msg[:5000]
+                if len(msg) > 1000: # cutoff of length 1000 for input sentences
+                    msg = msg[:1000]
                 msg = msg.replace("%27", "'")
                 sentences.append(Sentence(msg))
 
