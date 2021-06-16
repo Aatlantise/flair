@@ -28,11 +28,11 @@ def create_app():
 
     tagger = SequenceTagger.load('flair_chunking_model.pt')
 
-    batch_size = 256
+    batch_size = 512
 
     print("Batch size is " + str(batch_size))
 
-    max_len = 4096
+    max_len = 2048
 
     print("Max len is " + str(max_len))
 
