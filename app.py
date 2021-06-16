@@ -32,6 +32,8 @@ def create_app():
 
     print("Batch size is " + str(batch_size))
 
+    max_len = 2048
+
     @app.route('/api/v1/flair_chunking', methods=['POST'])
     def chunk():
         '''
@@ -81,8 +83,8 @@ def create_app():
             sentences = []
             for message in messages:
                 msg = message["text"]
-                if len(msg) > 1000: # cutoff of length 1000 for input sentences
-                    msg = msg[:1000]
+                if len(msg) > max_len: # cutoff of length 1000 for input sentences
+                    msg = msg[:max_len]
                 msg = msg.replace("%27", "'")
                 sentences.append(Sentence(msg))
 
