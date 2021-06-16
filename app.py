@@ -32,7 +32,9 @@ def create_app():
 
     print("Batch size is " + str(batch_size))
 
-    max_len = 2048
+    max_len = 4096
+
+    print("Max len is " + str(max_len))
 
     @app.route('/api/v1/flair_chunking', methods=['POST'])
     def chunk():
